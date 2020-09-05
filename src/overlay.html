@@ -48,6 +48,13 @@
           case "DROP":
             emojis = pieces[1].split(",").forEach((emoji) => drop(emoji));
             break;
+          case "DROPSOME":
+            emojis = pieces[1].split(",").forEach((emoji) => {
+              for (let i = 0; i < 10; i++) {
+                setTimeout(() => drop(emoji), Math.random() * 1000);
+              }
+            });
+            break;
           case "DROPMANY":
             emojis = pieces[1].split(",").forEach((emoji) => {
               for (let i = 0; i < 250; i++) {

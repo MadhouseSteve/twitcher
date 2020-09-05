@@ -25,6 +25,8 @@ export default async function (
   }
 
   if (wsClient) {
-    wsClient.send(`DROP ${emoji.map((param) => emoteList[param]).join(",")}`);
+    wsClient.send(
+      `DROPSOME ${emoji.map((param) => emoteList[param]).join(",")}`
+    );
   }
 }

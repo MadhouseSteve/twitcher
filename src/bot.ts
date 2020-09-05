@@ -31,3 +31,19 @@ client.on("raided", () => {
     wsClient.send(`RAID ${emoteList[process.env.RAID_EMOTE || "twitchRaid"]}`);
   }
 });
+
+client.on("message", (channel, userstate, msg, self) => {
+  if (self) {
+    return;
+  }
+  let emotes = [];
+
+  for (let key in emoteList) {
+    const re = new RegExp(key, "g");
+    emotes = [...emotes, ...(msg.match(re) || [])];
+  }
+
+  if (emotes && wsClient) {
+    wsClient.send(`DROP ${emotes.map((e) => emoteList[e])}`);
+  }
+});
