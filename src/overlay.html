@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Twitch Overlay</title>
+
+    <style>
+      body {
+        overflow: hidden;
+      }
+      .drop {
+        position: absolute;
+        top: -20px;
+        animation-name: drop;
+        animation-fill-mode: forwards;
+
+        animation-timing-function: ease-in;
+      }
+
+      @keyframes drop {
+        from {
+          top: -10%;
+        }
+        to {
+          top: 110%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      let ws;
+      function connect() {
+        console.log("🚀 Connecting");
+        ws = new WebSocket(document.location.href.replace(/^http/, "ws"));
+        ws.onmessage = handleMessage;
+
+        ws.onclose = ws.onerror = reconnect;
+        ws.onopen = () => console.log("👍👍👍 Connected");
+      }
+
+      function handleMessage(ev) {
+        const pieces = ev.data.split(" ");
+
+        let emojis;
+        switch (pieces[0]) {
+          case "DROP":
+            emojis = pieces[1].split(",").forEach((emoji) => drop(emoji));
+            break;
+          case "DROPMANY":
+            emojis = pieces[1].split(",").forEach((emoji) => {
+              for (let i = 0; i < 250; i++) {
+                setTimeout(() => drop(emoji), Math.random() * 2500);
+              }
+            });
+            break;
+          case "RAID":
+            for (let i = 0; i < 2000; i++) {
+              setTimeout(() => drop(pieces[1]), Math.random() * 5000);
+            }
+        }
+      }
+
+      function reconnect() {
+        ws.close();
+        console.log("DISCONNECTED! 😭😭😭😭");
+        // delete ws;
+        setTimeout(connect, 2500);
+      }
+
+      function drop(emoji) {
+        const duration = Math.random() * 5 + 2;
+        const size = Math.random() * 20 + 40;
+
+        let img = new Image(size, size);
+        img.src = emoji;
+        img.style.position = "absolute";
+        img.style.left = `${Math.random() * 98}%`;
+        img.className = "drop";
+        img.style.animationDuration = `${duration}s`;
+
+        document.body.appendChild(img);
+
+        setTimeout(() => document.body.removeChild(img), duration * 1000 + 500);
+      }
+
+      connect();
+    </script>
+  </body>
+</html>
