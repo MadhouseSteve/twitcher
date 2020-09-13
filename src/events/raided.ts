@@ -5,7 +5,7 @@ export default () => {
     wsClient.send(
       `RAID ${
         process.env.RAID_EMOTE ||
-        "https://static-cdn.jtvnw.net/emoticons/v1/${62836}/3.0"
+        "https://static-cdn.jtvnw.net/emoticons/v1/62836/3.0"
       }`
     );
   }
