@@ -33,6 +33,10 @@ export default async function (
     );
   }
 
+  if (!emotes.length && process.env.DEFAULT_EMOTE) {
+    emotes.push(process.env.DEFAULT_EMOTE);
+  }
+
   if (wsClient && emotes.length) {
     wsClient.send(`DROPSOME ${emotes.join(",")}`);
   }

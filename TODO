@@ -6,4 +6,5 @@ Production Ready:
 
 Enhancements:
   ✔ Drop multiple if multiple are given in a chat message, rather than one of each @started(20-09-13 11:18) @done(20-09-13 11:22) @lasted(4m29s)
-  ☐ Deploy to multiple places @started(20-09-13 11:31)
+  ✔ Deploy to multiple places @started(20-09-13 11:53) @done(20-09-13 11:53) @lasted(43s)
+  ☐ Default emote for drop and dropmany @started(20-09-13 11:56)
