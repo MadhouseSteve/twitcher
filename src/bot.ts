@@ -38,12 +38,15 @@ client.on("message", (channel, userstate, msg, self) => {
   let emotes = [];
   if (userstate.emotes) {
     const emoteIds = Object.keys(userstate.emotes);
-    emotes = emoteIds.map(
-      (emote) => `https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`
+    console.log(userstate.emotes);
+    emotes = emoteIds.map((emote) =>
+      `,https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`.repeat(
+        userstate.emotes[emote].length
+      )
     );
   }
 
   if (emotes.length && wsClient) {
-    wsClient.send(`DROP ${emotes.join(",")}`);
+    wsClient.send(`DROP ${emotes.join(",").substr(1)}`);
   }
 });
