@@ -3,3 +3,6 @@ Production Ready:
   ✔ Overlay WS reconnect if dropped @done(20-09-05 11:58)
   ✔ JSON file for custom emotes @done(20-09-05 11:49)
   ✔ Expand emote-set list @done(20-09-05 12:14)
+
+Enhancements:
+  ☐ Drop multiple if multiple are given in a chat message, rather than one of each
