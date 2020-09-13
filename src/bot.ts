@@ -3,7 +3,6 @@ config();
 
 import * as tmijs from "tmi.js";
 import { handleMessage } from "./commands";
-import { wsClient } from ".";
 import raided from "./events/raided";
 import cheer from "./events/cheer";
 
@@ -30,22 +29,3 @@ client.on("raided", raided);
 client.on("cheer", cheer);
 
 client.on("message", handleMessage);
-client.on("message", (channel, userstate, msg, self) => {
-  if (self) {
-    return;
-  }
-
-  let emotes = [];
-  if (userstate.emotes) {
-    const emoteIds = Object.keys(userstate.emotes);
-    emotes = emoteIds.map((emote) =>
-      `,https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`.repeat(
-        userstate.emotes[emote].length
-      )
-    );
-  }
-
-  if (emotes.length && wsClient) {
-    wsClient.send(`DROP ${emotes.join("").substr(1)}`);
-  }
-});
