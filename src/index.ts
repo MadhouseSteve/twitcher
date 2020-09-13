@@ -19,7 +19,7 @@ wss.on("connection", (client) => {
   wsClient = client;
 });
 
-server.listen({ port: 3000, host: "0.0.0.0" }, () => {
+server.listen({ port: process.env.PORT || 3000, host: "0.0.0.0" }, () => {
   const address = server.address() as AddressInfo;
   console.log(`🚀 Listening on http://${address.address}:${address.port}`);
 });
