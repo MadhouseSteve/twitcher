@@ -4,7 +4,8 @@ config();
 import * as tmijs from "tmi.js";
 import { handleMessage } from "./commands";
 import { wsClient } from ".";
-import { emoteList } from "./emoteList";
+import raided from "./events/raided";
+import cheer from "./events/cheer";
 
 const channel = process.env.CHANNEL || "madhousesteve";
 
@@ -24,26 +25,25 @@ client.connect().then(() => {
   if (process.env.CHANNEL_GREETING)
     client.say(channel, process.env.CHANNEL_GREETING);
 });
+
+client.on("raided", raided);
+client.on("cheer", cheer);
+
 client.on("message", handleMessage);
-
-client.on("raided", () => {
-  if (wsClient) {
-    wsClient.send(`RAID ${emoteList[process.env.RAID_EMOTE || "twitchRaid"]}`);
-  }
-});
-
 client.on("message", (channel, userstate, msg, self) => {
   if (self) {
     return;
   }
-  let emotes = [];
 
-  for (let key in emoteList) {
-    const re = new RegExp(key, "g");
-    emotes = [...emotes, ...(msg.match(re) || [])];
+  let emotes = [];
+  if (userstate.emotes) {
+    const emoteIds = Object.keys(userstate.emotes);
+    emotes = emoteIds.map(
+      (emote) => `https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`
+    );
   }
 
-  if (emotes && wsClient) {
-    wsClient.send(`DROP ${emotes.map((e) => emoteList[e])}`);
+  if (emotes.length && wsClient) {
+    wsClient.send(`DROP ${emotes.join(",")}`);
   }
 });

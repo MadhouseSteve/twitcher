@@ -1,32 +1,39 @@
-import { client } from "../bot";
 import { Userstate } from "tmi.js";
 import { wsClient } from "..";
-import { emoteList } from "../emoteList";
+import axios from "axios";
 
 export default async function (
   channel: string,
   userstate: Userstate,
   params: string[]
 ) {
-  if (!params.length) {
-    params.push(process.env.DEFAULT_EMOTE || "madhou8Fatcat");
+  let emotes = [];
+
+  if (params.length === 1 && params[0] === "me") {
+    try {
+      const response = await axios.get(
+        `https://api.twitch.tv/kraken/users/${userstate["user-id"]}`,
+        {
+          headers: {
+            accept: "application/vnd.twitchtv.v5+json",
+            "client-id": process.env.TWITCH_CLIENT_ID,
+          },
+        }
+      );
+      emotes.push(response.data.logo);
+    } catch (e) {
+      console.log(e);
+    }
   }
 
-  const emoji = params.filter(
-    (param) => Object.keys(emoteList).indexOf(param) > -1
-  );
-
-  if (!emoji.length) {
-    await client.say(
-      channel,
-      `@${userstate.username}: I can't drop any of the emojis you asked for`
+  if (userstate.emotes) {
+    const emoteIds = Object.keys(userstate.emotes);
+    emotes = emoteIds.map(
+      (emote) => `https://static-cdn.jtvnw.net/emoticons/v1/${emote}/3.0`
     );
-    return;
   }
 
-  if (wsClient) {
-    wsClient.send(
-      `DROPSOME ${emoji.map((param) => emoteList[param]).join(",")}`
-    );
+  if (wsClient && emotes.length) {
+    wsClient.send(`DROPSOME ${emotes.join(",")}`);
   }
 }
