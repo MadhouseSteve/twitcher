@@ -1,7 +1,7 @@
 import { Userstate } from "tmi.js";
 import { wsClient } from "..";
 
-export default (channel: string, userstate: Userstate, message: string) => {
+export default (channel: string, userstate: Userstate, params: string[]) => {
   if (wsClient) {
     let emotes = [];
 
@@ -16,6 +16,6 @@ export default (channel: string, userstate: Userstate, message: string) => {
       emotes.push(process.env.DEFAULT_EMOTE);
     }
 
-    wsClient.send(`CHEER ${userstate.bits} ${emotes[0]}`);
+    wsClient.send(`CHEER ${params[0]} ${emotes[0]}`);
   }
 };
